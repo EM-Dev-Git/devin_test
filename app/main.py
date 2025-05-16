@@ -8,6 +8,7 @@ from datetime import datetime
 from app.database import engine, Base
 from app.routes.items import router as items_router
 from app.routes.auth import router as auth_router
+from app.routes.llm import router as llm_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -62,6 +63,9 @@ app_logger.info("Application startup: Auth router registered")
 
 app.include_router(items_router)
 app_logger.info("Application startup: Item router registered")
+
+app.include_router(llm_router)
+app_logger.info("Application startup: LLM router registered")
 
 @app.get("/")
 async def root():
