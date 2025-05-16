@@ -1,3 +1,9 @@
+"""
+EM_test_project - FastAPIを使用したRESTful APIアプリケーション
+
+このファイルはアプリケーションのエントリーポイントです。
+Uvicornサーバーを使用してFastAPIアプリケーションを起動します。
+"""
 import uvicorn
 
 from app.main import app
