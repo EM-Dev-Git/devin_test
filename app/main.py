@@ -5,7 +5,11 @@ import time
 import os
 from datetime import datetime
 
+from app.database import engine, Base
 from app.routes.items import router as items_router
+from app.routes.auth import router as auth_router
+
+Base.metadata.create_all(bind=engine)
 
 os.makedirs("logs", exist_ok=True)
 
@@ -52,6 +56,9 @@ app.add_middleware(
 )
 
 app_logger.info("Application startup: CORS middleware configured")
+
+app.include_router(auth_router)
+app_logger.info("Application startup: Auth router registered")
 
 app.include_router(items_router)
 app_logger.info("Application startup: Item router registered")
