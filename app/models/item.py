@@ -25,4 +25,4 @@ class Item(Base):
     tax = Column(Float, nullable=True, comment="アイテムの税金")
     owner_id = Column(Integer, ForeignKey("users.id"), comment="所有者のユーザーID")
     
-    owner = relationship("User", back_populates="items", comment="アイテムの所有者")
+    owner = relationship("User", back_populates="items")  # アイテムの所有者
