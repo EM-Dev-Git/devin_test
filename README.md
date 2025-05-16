@@ -1,6 +1,6 @@
-# EM_test_project
+# devin_test (EM_test_project)
 
-テストと検証のためのFastAPIプロジェクト。
+松岡検証環境 - テストと検証のためのFastAPIプロジェクト。
 
 ## セットアップ
 
