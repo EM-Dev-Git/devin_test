@@ -1,38 +1,38 @@
 # EM_test_project
 
-A FastAPI project for testing and verification.
+テストと検証のためのFastAPIプロジェクト。
 
-## Setup
+## セットアップ
 
-1. Clone the repository
-2. Create a virtual environment:
+1. リポジトリをクローンする
+2. 仮想環境を作成する：
    ```
    python -m venv venv
    ```
-3. Activate the virtual environment:
-   - On Windows: `venv\Scripts\activate`
-   - On Unix or MacOS: `source venv/bin/activate`
-4. Install dependencies:
+3. 仮想環境を有効化する：
+   - Windowsの場合： `venv\Scripts\activate`
+   - UnixまたはMacOSの場合： `source venv/bin/activate`
+4. 依存関係をインストールする：
    ```
    pip install -r requirements.txt
    ```
 
-## Running the Application
+## アプリケーションの実行
 
-Start the application with:
+以下のコマンドでアプリケーションを起動：
 ```
 uvicorn main:app --reload
 ```
 
-Or run the main.py file directly:
+または、main.pyファイルを直接実行：
 ```
 python main.py
 ```
 
-The API will be available at http://localhost:8000
+APIは http://localhost:8000 で利用可能になります。
 
-## API Documentation
+## APIドキュメント
 
-Once the application is running, you can access the automatic API documentation at:
+アプリケーション実行後、以下のURLで自動生成されたAPIドキュメントにアクセスできます：
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
