@@ -1,3 +1,10 @@
+"""
+AI問い合わせのためのAPIルーター
+
+このモジュールはOpenAI APIを使用したAI問い合わせエンドポイントを提供します。
+すべてのエンドポイントは認証が必要で、プロンプトテンプレートを使用して
+OpenAI APIにリクエストを送信します。
+"""
 from fastapi import APIRouter, Depends, HTTPException, status
 import logging
 from sqlalchemy.orm import Session
@@ -13,10 +20,10 @@ logger = logging.getLogger("app")
 
 router = APIRouter(
     prefix="/llm",
-    tags=["llm"],
+    tags=["AI問い合わせ"],
     responses={
-        401: {"description": "Unauthorized"},
-        500: {"description": "OpenAI API Error"}
+        401: {"description": "認証されていません"},
+        500: {"description": "OpenAI APIエラー"}
     },
 )
 
@@ -27,8 +34,19 @@ async def chat_with_ai(
     current_user: User = Depends(get_current_active_user)
 ):
     """
-    Chat with AI using OpenAI API.
-    Requires authentication.
+    AIとチャットする
+    
+    OpenAI APIを使用してAIとチャットします。このエンドポイントは認証が必要です。
+    
+    - **prompt**: ユーザーの質問やプロンプト（必須）
+    - **max_tokens**: 生成する最大トークン数（オプション、デフォルト: 1000）
+    - **temperature**: 応答の多様性を制御するパラメータ（オプション、デフォルト: 0.7）
+    
+    プロンプトはテンプレートに適用され、OpenAI APIに送信されます。
+    応答には生成されたテキスト、使用されたモデル、トークン使用量が含まれます。
+    
+    APIキーが設定されていない場合や、OpenAI APIでエラーが発生した場合は
+    500エラーが返されます。
     """
     try:
         messages = get_chat_prompt(request.prompt)

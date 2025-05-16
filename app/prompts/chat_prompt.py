@@ -1,5 +1,8 @@
 """
-Chat prompt templates for OpenAI integration.
+OpenAI連携用プロンプトテンプレート
+
+このモジュールはOpenAI APIに送信するためのプロンプトテンプレートを定義します。
+システムプロンプトとユーザープロンプトの形式を提供し、一貫したAI応答を生成します。
 """
 
 SYSTEM_PROMPT = """
@@ -12,14 +15,17 @@ DEFAULT_PROMPT = """
 
 def get_chat_prompt(user_input, system_prompt=SYSTEM_PROMPT):
     """
-    Generate a chat prompt for OpenAI API.
+    OpenAI API用のチャットプロンプトを生成する
+    
+    ユーザー入力とシステムプロンプトを組み合わせて、
+    OpenAI APIに送信するためのメッセージリストを生成します。
     
     Args:
-        user_input (str): User's question or input
-        system_prompt (str, optional): System prompt to set assistant behavior
+        user_input: ユーザーの質問や入力
+        system_prompt: AIの振る舞いを設定するシステムプロンプト（オプション）
         
     Returns:
-        list: List of message dictionaries for OpenAI API
+        list: OpenAI API用のメッセージ辞書のリスト
     """
     messages = [
         {"role": "system", "content": system_prompt},

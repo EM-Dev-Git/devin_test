@@ -1,3 +1,10 @@
+"""
+EM_test_project - FastAPIアプリケーションのメインモジュール
+
+このモジュールはFastAPIアプリケーションの設定、ミドルウェア、ルーターの登録、
+およびベースエンドポイントの定義を行います。SQLiteデータベース、認証機能、
+ロギング機能、およびOpenAI連携機能を統合しています。
+"""
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -31,10 +38,19 @@ logger.addHandler(file_handler)
 
 app_logger = logger
 
-app = FastAPI(title="EM_test_project")
+app = FastAPI(
+    title="EM_test_project",
+    description="FastAPIを使用したRESTful APIアプリケーション（SQLite認証とOpenAI連携機能付き）",
+    version="0.2.0"
+)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
+    """
+    HTTPリクエストのロギングミドルウェア
+    
+    すべてのリクエストのメソッド、パス、ステータスコード、処理時間をログに記録します。
+    """
     start_time = time.time()
     
     method = request.method
@@ -50,10 +66,10 @@ async def log_requests(request: Request, call_next):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],  # すべてのオリジンを許可
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],  # すべてのHTTPメソッドを許可
+    allow_headers=["*"],  # すべてのヘッダーを許可
 )
 
 app_logger.info("Application startup: CORS middleware configured")
@@ -67,12 +83,22 @@ app_logger.info("Application startup: Item router registered")
 app.include_router(llm_router)
 app_logger.info("Application startup: LLM router registered")
 
-@app.get("/")
+@app.get("/", tags=["基本"])
 async def root():
+    """
+    ルートエンドポイント
+    
+    アプリケーションのウェルカムメッセージを返します。
+    """
     app_logger.info("Root endpoint accessed")
     return {"message": "Welcome to EM_test_project API"}
 
-@app.get("/health")
+@app.get("/health", tags=["基本"])
 async def health_check():
+    """
+    ヘルスチェックエンドポイント
+    
+    アプリケーションの稼働状態を確認するためのエンドポイントです。
+    """
     app_logger.info("Health check endpoint accessed")
     return {"status": "healthy"}
