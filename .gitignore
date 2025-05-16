@@ -7,3 +7,5 @@ __pycache__/
 env/
 ENV/
 .DS_Store
+logs/
+sqlite_db/
