@@ -96,6 +96,7 @@ components = [
     ('COMP-004', '認証モジュール', 'ユーザー認証とトークン管理', 'COMP-001', 'JWT, Passlib'),
     ('COMP-005', 'ロギングモジュール', 'アプリケーションログの管理', 'COMP-001', 'Python標準ロギング'),
     ('COMP-006', 'データベース', 'ユーザー情報の永続化', 'COMP-001, COMP-004', 'SQLite, SQLAlchemy'),
+    ('COMP-007', 'サービス層', 'ビジネスロジックの分離と管理', 'COMP-001, COMP-002, COMP-006', 'Python'),
 ]
 
 for i, comp in enumerate(components, 4):
@@ -148,7 +149,7 @@ designs = [
      'プロンプトは別ファイルで管理し、容易に変更できるようにする'),
     ('CD-003', 'LLMルーター', 
      'AIチャットエンドポイントを提供する', 
-     'POST /llm/chat', 
+     'POST /api/v1/llm/chat', 
      'リクエスト検証、OpenAIクライアント呼び出し、レスポンス生成', 
      'すべてのエンドポイントは認証が必要'),
 ]

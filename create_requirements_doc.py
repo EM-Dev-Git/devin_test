@@ -180,7 +180,7 @@ for cell in api[3]:
     cell.alignment = Alignment(horizontal='center')
 
 requirements = [
-    ('API-001', '/llm/chat', 'AIとチャットするためのエンドポイント', 'prompt, max_tokens, temperature', 'response, model, usage', '必須'),
+    ('API-001', '/api/v1/llm/chat', 'AIとチャットするためのエンドポイント', 'prompt, max_tokens, temperature', 'response, model, usage', '必須'),
 ]
 
 for i, req in enumerate(requirements, 4):
