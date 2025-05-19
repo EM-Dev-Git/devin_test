@@ -9,7 +9,7 @@ from typing import Optional
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "env", ".env"))
 
 class Settings(BaseSettings):
     """
@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     OPENAI_API_MODEL: str = Field(default="gpt-3.5-turbo", env="OPENAI_API_MODEL")
     
     class Config:
-        env_file = ".env"
+        env_file = os.path.join("env", ".env")
         env_file_encoding = "utf-8"
         case_sensitive = True
 
