@@ -38,10 +38,12 @@ logger.addHandler(file_handler)
 
 app_logger = logger
 
+from app.core.config import settings
+
 app = FastAPI(
-    title="EM_test_project",
-    description="FastAPIを使用したRESTful APIアプリケーション（SQLite認証とOpenAI連携機能付き）",
-    version="0.2.0"
+    title=settings.APP_NAME,
+    description=settings.APP_DESCRIPTION,
+    version=settings.APP_VERSION
 )
 
 @app.middleware("http")
