@@ -4,7 +4,8 @@
 このモジュールは.envファイルから環境変数を読み込み、アプリケーション全体で使用される
 設定値を一元管理します。APIキーやエンドポイントURLなどの機密情報を安全に管理します。
 """
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 from typing import Optional
 import os
 from dotenv import load_dotenv

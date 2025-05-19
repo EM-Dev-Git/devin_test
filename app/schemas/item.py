@@ -29,6 +29,15 @@ class ItemCreate(ItemBase):
     """
     pass
 
+class ItemUpdate(ItemBase):
+    """
+    アイテム更新スキーマ
+    
+    既存のアイテムを更新する際に使用されるスキーマです。
+    ItemBaseのすべての属性を継承します。
+    """
+    pass
+
 class Item(ItemBase):
     """
     アイテムレスポンススキーマ
