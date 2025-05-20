@@ -1,0 +1,227 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-7.4.3, pluggy-1.6.0 -- /home/ubuntu/EM_test_project/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/EM_test_project
+plugins: mock-3.12.0, asyncio-0.23.2, anyio-4.9.0, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collecting ... collected 22 items
+
+tests/api/v1/test_base_endpoints.py::test_root_endpoint PASSED           [  4%]
+tests/api/v1/test_base_endpoints.py::test_health_check_endpoint PASSED   [  9%]
+tests/api/v1/endpoints/test_auth.py::test_register_user FAILED           [ 13%]
+tests/api/v1/endpoints/test_auth.py::test_register_duplicate_user PASSED [ 18%]
+tests/api/v1/endpoints/test_auth.py::test_login_for_access_token FAILED  [ 22%]
+tests/api/v1/endpoints/test_auth.py::test_login_with_invalid_credentials PASSED [ 27%]
+tests/api/v1/endpoints/test_items.py::test_create_item_endpoint PASSED   [ 31%]
+tests/api/v1/endpoints/test_items.py::test_get_items_endpoint PASSED     [ 36%]
+tests/api/v1/endpoints/test_items.py::test_get_item_endpoint PASSED      [ 40%]
+tests/api/v1/endpoints/test_items.py::test_get_nonexistent_item_endpoint PASSED [ 45%]
+tests/api/v1/endpoints/test_items.py::test_update_item_endpoint PASSED   [ 50%]
+tests/api/v1/endpoints/test_items.py::test_delete_item_endpoint PASSED   [ 54%]
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai PASSED             [ 59%]
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_unauthorized PASSED [ 63%]
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_invalid_request PASSED [ 68%]
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_api_key_not_set PASSED [ 72%]
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_performance PASSED [ 77%]
+tests/api/v1/endpoints/test_llm.py::test_masui_introduction PASSED       [ 81%]
+tests/utils/test_middleware_and_utils.py::test_logging_middleware PASSED [ 86%]
+tests/utils/test_middleware_and_utils.py::test_cors_settings PASSED      [ 90%]
+tests/utils/test_middleware_and_utils.py::test_settings_loading PASSED   [ 95%]
+tests/utils/test_middleware_and_utils.py::test_jwt_token_verification PASSED [100%]
+
+=================================== FAILURES ===================================
+______________________________ test_register_user ______________________________
+
+client = <starlette.testclient.TestClient object at 0x7f2b7b4dbc20>
+
+    def test_register_user(client):
+        """
+        AUTH-001: ユーザー登録のテスト
+    
+        有効なユーザーデータでユーザー登録エンドポイントにリクエストを送信し、
+        正常に登録されることを確認します。
+        """
+        logger.info("テスト開始: ユーザー登録のテスト")
+        start_time = time.time()
+    
+        user_data = {
+            "username": "newuser",
+            "email": "newuser@example.com",
+            "password": "Password123!"
+        }
+    
+        response = client.post("/api/v1/auth/register", json=user_data)
+    
+>       assert response.status_code == 201
+E       assert 400 == 201
+E        +  where 400 = <Response [400 Bad Request]>.status_code
+
+tests/api/v1/endpoints/test_auth.py:31: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2025-05-20 06:13:11,382 - app - INFO - Registering new user: newuser
+2025-05-20 06:13:11,386 - app - WARNING - Registration failed: Username newuser already registered
+2025-05-20 06:13:11,386 - app - WARNING - Registration failed: Username already registered
+2025-05-20 06:13:11,387 - app - INFO - POST /api/v1/auth/register - Status: 400 - Time: 0.0127s
+------------------------------ Captured log call -------------------------------
+INFO     test:test_auth.py:20 テスト開始: ユーザー登録のテスト
+INFO     app:auth_service.py:32 Registering new user: newuser
+WARNING  app:auth_service.py:36 Registration failed: Username newuser already registered
+WARNING  app:auth.py:38 Registration failed: Username already registered
+INFO     app:main.py:64 POST /api/v1/auth/register - Status: 400 - Time: 0.0127s
+_________________________ test_login_for_access_token __________________________
+
+client = <starlette.testclient.TestClient object at 0x7f2b7ab6b890>
+test_user = <app.models.user.User object at 0x7f2b7ab6b470>
+
+    def test_login_for_access_token(client, test_user):
+        """
+        AUTH-003: トークン取得のテスト
+    
+        有効な認証情報でトークン取得エンドポイントにリクエストを送信し、
+        JWTトークンが返されることを確認します。
+        """
+        logger.info("テスト開始: トークン取得のテスト")
+        start_time = time.time()
+    
+        login_data = {
+            "username": "testuser",
+            "password": "testpassword"
+        }
+    
+        response = client.post("/api/v1/auth/token", data=login_data, headers={"Content-Type": "application/x-www-form-urlencoded"})
+    
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/api/v1/endpoints/test_auth.py:93: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2025-05-20 06:13:12,032 - app - INFO - Authenticating user: testuser
+2025-05-20 06:13:12,305 - app - WARNING - Authentication failed for user: testuser
+2025-05-20 06:13:12,305 - app - WARNING - Login failed: Invalid credentials for username testuser
+2025-05-20 06:13:12,306 - app - INFO - POST /api/v1/auth/token - Status: 401 - Time: 0.2782s
+------------------------------ Captured log call -------------------------------
+INFO     test:test_auth.py:83 テスト開始: トークン取得のテスト
+INFO     app:auth_service.py:70 Authenticating user: testuser
+WARNING  app:auth_service.py:73 Authentication failed for user: testuser
+WARNING  app:auth.py:62 Login failed: Invalid credentials for username testuser
+INFO     app:main.py:64 POST /api/v1/auth/token - Status: 401 - Time: 0.2782s
+=============================== warnings summary ===============================
+app/db/session.py:23
+  /home/ubuntu/EM_test_project/app/db/session.py:23: MovedIn20Warning: The ``declarative_base()`` function is now available as sqlalchemy.orm.declarative_base(). (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+    Base = declarative_base()
+
+app/database.py:22
+  /home/ubuntu/EM_test_project/app/database.py:22: MovedIn20Warning: The ``declarative_base()`` function is now available as sqlalchemy.orm.declarative_base(). (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+    Base = declarative_base()
+
+venv/lib/python3.12/site-packages/passlib/utils/__init__.py:854
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+    from crypt import crypt as _crypt
+
+venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323
+venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323
+venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/pydantic/_internal/_config.py:323: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+venv/lib/python3.12/site-packages/pydantic/fields.py:1076
+venv/lib/python3.12/site-packages/pydantic/fields.py:1076
+venv/lib/python3.12/site-packages/pydantic/fields.py:1076
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/pydantic/fields.py:1076: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'env'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn(
+
+tests/api/v1/test_base_endpoints.py::test_root_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/test_base_endpoints.py::test_root_endpoint returned {'test_id': 'BASE-001', 'status': '成功', 'execution_time': 0.0024542808532714844, 'details': 'ルートエンドポイントが正常に応答しました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/test_base_endpoints.py::test_health_check_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/test_base_endpoints.py::test_health_check_endpoint returned {'test_id': 'BASE-002', 'status': '成功', 'execution_time': 0.001983165740966797, 'details': 'ヘルスチェックエンドポイントが正常に応答しました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_auth.py::test_register_duplicate_user
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_auth.py::test_register_duplicate_user returned {'test_id': 'AUTH-002', 'status': '成功', 'execution_time': 0.0048902034759521484, 'details': '既存のユーザー名で登録を試みた際に適切なエラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_auth.py::test_login_with_invalid_credentials
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_auth.py::test_login_with_invalid_credentials returned {'test_id': 'AUTH-004', 'status': '成功', 'execution_time': 0.2794771194458008, 'details': '無効なパスワードで適切な認証エラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py: 6 warnings
+tests/api/v1/endpoints/test_llm.py: 5 warnings
+  /home/ubuntu/EM_test_project/app/utils/auth.py:69: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+tests/api/v1/endpoints/test_items.py::test_create_item_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_create_item_endpoint returned {'test_id': 'ITEM-001', 'status': '成功', 'execution_time': 0.014947175979614258, 'details': 'アイテムが正常に作成されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py::test_get_items_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_get_items_endpoint returned {'test_id': 'ITEM-002', 'status': '成功', 'execution_time': 0.005610227584838867, 'details': 'アイテム一覧が正常に取得されました。アイテム数: 7'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py::test_get_item_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_get_item_endpoint returned {'test_id': 'ITEM-003', 'status': '成功', 'execution_time': 0.005526542663574219, 'details': 'アイテムID 13 が正常に取得されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py::test_get_nonexistent_item_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_get_nonexistent_item_endpoint returned {'test_id': 'ITEM-004', 'status': '成功', 'execution_time': 0.00606989860534668, 'details': '存在しないアイテムIDに対して適切なエラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py::test_update_item_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_update_item_endpoint returned {'test_id': 'ITEM-005', 'status': '成功', 'execution_time': 0.009857654571533203, 'details': 'アイテムID 14 が正常に更新されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_items.py::test_delete_item_endpoint
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_items.py::test_delete_item_endpoint returned {'test_id': 'ITEM-006', 'status': '成功', 'execution_time': 0.01122903823852539, 'details': 'アイテムID 15 が正常に削除されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_chat_with_ai returned {'test_id': 'LLM-001', 'status': '成功', 'execution_time': 0.00652313232421875, 'details': 'AIチャットエンドポイントが正常に応答しました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_unauthorized
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_unauthorized returned {'test_id': 'LLM-002', 'status': '成功', 'execution_time': 0.004477024078369141, 'details': '未認証ユーザーに対して適切な認証エラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_invalid_request
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_invalid_request returned {'test_id': 'LLM-003', 'status': '成功', 'execution_time': 0.0046482086181640625, 'details': '無効なリクエストに対して適切なバリデーションエラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_api_key_not_set
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_api_key_not_set returned {'test_id': 'LLM-004', 'status': '成功', 'execution_time': 0.005797624588012695, 'details': 'APIキー未設定時に適切なエラーが返されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_performance
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_chat_with_ai_performance returned {'test_id': 'LLM-005', 'status': '成功', 'execution_time': 0.005841255187988281, 'details': '長いプロンプトに対するレスポンス時間は 0.01秒でした。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/api/v1/endpoints/test_llm.py::test_masui_introduction
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/api/v1/endpoints/test_llm.py::test_masui_introduction returned {'test_id': 'LLM-006', 'status': '成功', 'execution_time': 0.005272388458251953, 'details': 'AI自己紹介エンドポイントが正常に応答しました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/utils/test_middleware_and_utils.py::test_logging_middleware
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/utils/test_middleware_and_utils.py::test_logging_middleware returned {'test_id': 'UTIL-001', 'status': '成功', 'execution_time': 0.0016372203826904297, 'details': 'リクエストが正しくログに記録されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/utils/test_middleware_and_utils.py::test_cors_settings
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/utils/test_middleware_and_utils.py::test_cors_settings returned {'test_id': 'UTIL-002', 'status': '成功', 'execution_time': 0.0008459091186523438, 'details': 'CORSヘッダーが正しく設定されています。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/utils/test_middleware_and_utils.py::test_settings_loading
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/utils/test_middleware_and_utils.py::test_settings_loading returned {'test_id': 'UTIL-003', 'status': '成功', 'execution_time': 5.9604644775390625e-06, 'details': '設定値が正しく読み込まれています。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+tests/utils/test_middleware_and_utils.py::test_jwt_token_verification
+  /home/ubuntu/EM_test_project/app/utils/auth.py:67: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expire = datetime.utcnow() + expires_delta
+
+tests/utils/test_middleware_and_utils.py::test_jwt_token_verification
+  /home/ubuntu/EM_test_project/venv/lib/python3.12/site-packages/_pytest/python.py:198: PytestReturnNotNoneWarning: Expected None, but tests/utils/test_middleware_and_utils.py::test_jwt_token_verification returned {'test_id': 'UTIL-004', 'status': '成功', 'execution_time': 0.0040874481201171875, 'details': '期限切れトークンが正しく検証されました。'}, which will be an error in a future version of pytest.  Did you mean to use `assert` instead of `return`?
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/api/v1/endpoints/test_auth.py::test_register_user - assert 400 =...
+FAILED tests/api/v1/endpoints/test_auth.py::test_login_for_access_token - ass...
+================== 2 failed, 20 passed, 41 warnings in 6.74s ===================
