@@ -4,8 +4,11 @@ __pycache__/
 *.class
 .env
 .venv
-env/
 ENV/
 .DS_Store
 logs/
 sqlite_db/
+
+# Allow env directory but ignore .env file inside it
+!env/
+env/.env

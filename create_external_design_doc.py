@@ -92,7 +92,7 @@ for cell in api[3]:
     cell.alignment = Alignment(horizontal='center')
 
 endpoints = [
-    ('/llm/chat', 'POST', 'AIとチャットするためのエンドポイント', 
+    ('/api/v1/llm/chat', 'POST', 'AIとチャットするためのエンドポイント', 
      '{\n  "prompt": "string",\n  "max_tokens": 1000,\n  "temperature": 0.7\n}', 
      '{\n  "response": "string",\n  "model": "string",\n  "usage": {\n    "prompt_tokens": 0,\n    "completion_tokens": 0,\n    "total_tokens": 0\n  }\n}', 
      'JWT Bearer Token', 

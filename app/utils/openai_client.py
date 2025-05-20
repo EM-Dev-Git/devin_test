@@ -2,16 +2,41 @@
 OpenAI APIクライアントユーティリティ
 
 このモジュールはOpenAI APIとの通信を処理するためのユーティリティ関数を提供します。
-環境変数からAPIキーを取得し、チャット完了APIを使用してAI応答を生成します。
+設定クラスからAPIキーとエンドポイントを取得し、チャット完了APIを使用してAI応答を生成します。
 """
-import os
 import logging
 from openai import OpenAI
 from typing import Dict, List, Any, Optional
 
+from app.core.config import settings
+
 logger = logging.getLogger("app")
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))
+def get_openai_client() -> OpenAI:
+    """
+    OpenAIクライアントのインスタンスを取得する
+    
+    設定クラスから取得したAPIキーとエンドポイントを使用して、
+    OpenAIクライアントのインスタンスを生成します。
+    
+    Returns:
+        OpenAI: OpenAIクライアントのインスタンス
+        
+    Raises:
+        ValueError: APIキーが設定されていない場合
+    """
+    if not settings.OPENAI_API_KEY or settings.OPENAI_API_KEY == "":
+        logger.error("OpenAI API key not found")
+        raise ValueError("OpenAI API key not configured")
+    
+    client_kwargs = {
+        "api_key": settings.OPENAI_API_KEY,
+    }
+    
+    if settings.OPENAI_API_BASE:
+        client_kwargs["base_url"] = settings.OPENAI_API_BASE
+        
+    return OpenAI(**client_kwargs)
 
 async def generate_response(
     messages: List[Dict[str, str]], 
@@ -37,13 +62,11 @@ async def generate_response(
         Exception: API呼び出し中にエラーが発生した場合
     """
     try:
-        if not client.api_key or client.api_key == "":
-            logger.error("OpenAI API key not found")
-            raise ValueError("OpenAI API key not configured")
+        client = get_openai_client()
             
         # OpenAI APIにリクエストを送信
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=settings.OPENAI_API_MODEL,
             messages=messages,
             max_tokens=max_tokens,
             temperature=temperature

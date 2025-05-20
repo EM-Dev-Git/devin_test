@@ -12,10 +12,9 @@ import time
 import os
 from datetime import datetime
 
-from app.database import engine, Base
-from app.routes.items import router as items_router
-from app.routes.auth import router as auth_router
-from app.routes.llm import router as llm_router
+from app.db.session import engine
+from app.db.base import Base
+from app.api.v1.router import router as api_v1_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -38,10 +37,12 @@ logger.addHandler(file_handler)
 
 app_logger = logger
 
+from app.core.config import settings
+
 app = FastAPI(
-    title="EM_test_project",
-    description="FastAPIを使用したRESTful APIアプリケーション（SQLite認証とOpenAI連携機能付き）",
-    version="0.2.0"
+    title=settings.APP_NAME,
+    description=settings.APP_DESCRIPTION,
+    version=settings.APP_VERSION
 )
 
 @app.middleware("http")
@@ -74,14 +75,8 @@ app.add_middleware(
 
 app_logger.info("Application startup: CORS middleware configured")
 
-app.include_router(auth_router)
-app_logger.info("Application startup: Auth router registered")
-
-app.include_router(items_router)
-app_logger.info("Application startup: Item router registered")
-
-app.include_router(llm_router)
-app_logger.info("Application startup: LLM router registered")
+app.include_router(api_v1_router)
+app_logger.info("Application startup: API v1 router registered")
 
 @app.get("/", tags=["基本"])
 async def root():

@@ -7,7 +7,7 @@
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from app.db.session import Base
 
 class User(Base):
     """
@@ -25,4 +25,4 @@ class User(Base):
     hashed_password = Column(String, comment="ハッシュ化されたパスワード")
     is_active = Column(Boolean, default=True, comment="アカウントがアクティブかどうか")
     
-    items = relationship("Item", back_populates="owner", comment="ユーザーが所有するアイテム")
+    items = relationship("Item", back_populates="owner")  # ユーザーが所有するアイテム

@@ -97,3 +97,23 @@ def verify_token(token: str, credentials_exception):
     except JWTError as e:
         logger.warning(f"JWT verification failed: {e}")
         raise credentials_exception
+
+def decode_access_token(token: str) -> Optional[str]:
+    """
+    JWTアクセストークンからユーザー名を取得する
+    
+    JWTトークンを検証し、含まれるユーザー名を取得します。
+    
+    Args:
+        token: 検証するJWTトークン
+        
+    Returns:
+        str: トークンから取得したユーザー名、トークンが無効な場合はNone
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        return username
+    except JWTError as e:
+        logger.warning(f"JWT verification failed: {e}")
+        return None

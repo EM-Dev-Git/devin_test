@@ -90,12 +90,13 @@ for cell in module[3]:
     cell.alignment = Alignment(horizontal='center')
 
 modules = [
-    ('MOD-001', 'app.routes.llm', 'OpenAI APIエンドポイントを提供するルーターモジュール', 'app.utils.openai_client, app.prompts.chat_prompt', 'AI開発チーム'),
+    ('MOD-001', 'app.api.v1.endpoints.llm', 'OpenAI APIエンドポイントを提供するルーターモジュール', 'app.services.llm_service, app.prompts.chat_prompt', 'AI開発チーム'),
     ('MOD-002', 'app.utils.openai_client', 'OpenAI APIとの通信を処理するユーティリティモジュール', 'openai', 'AI開発チーム'),
     ('MOD-003', 'app.prompts.chat_prompt', 'AIプロンプトテンプレートを提供するモジュール', 'なし', 'AI開発チーム'),
     ('MOD-004', 'app.schemas.llm', 'AIリクエスト/レスポンスのPydanticスキーマを定義するモジュール', 'pydantic', 'AI開発チーム'),
-    ('MOD-005', 'app.dependencies', '認証依存関係を提供するモジュール', 'app.utils.auth', 'セキュリティチーム'),
+    ('MOD-005', 'app.api.v1.dependencies.auth', '認証依存関係を提供するモジュール', 'app.utils.auth', 'セキュリティチーム'),
     ('MOD-006', 'app.utils.logging', 'ロギング機能を提供するユーティリティモジュール', 'logging', 'インフラチーム'),
+    ('MOD-007', 'app.services.llm_service', 'LLM関連のビジネスロジックを提供するサービスモジュール', 'app.utils.openai_client', 'AI開発チーム'),
 ]
 
 for i, mod in enumerate(modules, 4):
@@ -135,12 +136,13 @@ for cell in file_list[3]:
     cell.alignment = Alignment(horizontal='center')
 
 files = [
-    ('FILE-001', 'app/routes/llm.py', 'OpenAI APIエンドポイントを提供するルーターファイル', 'app/utils/openai_client.py, app/prompts/chat_prompt.py', '~50'),
+    ('FILE-001', 'app/api/v1/endpoints/llm.py', 'OpenAI APIエンドポイントを提供するルーターファイル', 'app/services/llm_service.py, app/prompts/chat_prompt.py', '~50'),
     ('FILE-002', 'app/utils/openai_client.py', 'OpenAI APIとの通信を処理するユーティリティファイル', 'なし', '~70'),
     ('FILE-003', 'app/prompts/chat_prompt.py', 'AIプロンプトテンプレートを提供するファイル', 'なし', '~30'),
     ('FILE-004', 'app/schemas/llm.py', 'AIリクエスト/レスポンスのPydanticスキーマを定義するファイル', 'なし', '~40'),
-    ('FILE-005', 'app/main.py', 'FastAPIアプリケーションのメインファイル（LLMルーターの登録を含む）', 'app/routes/llm.py', '~100'),
+    ('FILE-005', 'app/main.py', 'FastAPIアプリケーションのメインファイル（LLMルーターの登録を含む）', 'app/api/v1/router.py', '~100'),
     ('FILE-006', 'requirements.txt', 'プロジェクトの依存関係を定義するファイル（openaiパッケージを含む）', 'なし', '~10'),
+    ('FILE-007', 'app/services/llm_service.py', 'LLM関連のビジネスロジックを提供するサービスファイル', 'app/utils/openai_client.py', '~60'),
 ]
 
 for i, file in enumerate(files, 4):
@@ -248,12 +250,12 @@ classes = [
      'AIリクエストのPydanticモデル', 
      'prompt: str - ユーザーの入力または質問\nmax_tokens: Optional[int] - 生成する最大トークン数\ntemperature: Optional[float] - 応答の多様性を制御するパラメータ', 
      'なし（Pydanticモデル）', 
-     'Pydanticの標準的なモデル実装。Field()を使用して各フィールドに説明を追加し、Swagger UIでのドキュメント表示を改善。'),
+     'Pydanticの標準的なモデル実装。Field()を使用して各フィールドに説明を追加し、Swagger UIでのドキュメント表示を改善。from_attributes = Trueを使用してORMモデルとの変換を可能にします。'),
     ('CLS-002', 'LLMResponse', 
      'AIレスポンスのPydanticモデル', 
      'response: str - AIから生成された応答テキスト\nmodel: Optional[str] - 使用されたAIモデル\nusage: Optional[Dict[str, Any]] - トークン使用量情報', 
      'なし（Pydanticモデル）', 
-     'Pydanticの標準的なモデル実装。Field()を使用して各フィールドに説明を追加し、Swagger UIでのドキュメント表示を改善。'),
+     'Pydanticの標準的なモデル実装。Field()を使用して各フィールドに説明を追加し、Swagger UIでのドキュメント表示を改善。from_attributes = Trueを使用してORMモデルとの変換を可能にします。'),
 ]
 
 for i, cls in enumerate(classes, 4):
